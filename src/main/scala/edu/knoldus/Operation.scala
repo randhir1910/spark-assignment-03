@@ -8,10 +8,9 @@ object Operation extends App {
   val conf = new SparkConf().setMaster("local[*]")
   val spark = SparkSession.builder().appName("Spark assignment").config(conf).getOrCreate()
   val csvPath = "src/main/resources/D1.csv"
-  val fileData: DataFrame = spark.read.csv(csvPath).toDF()
+  val fileData: DataFrame = spark.read.format("csv").option("header","true").load(csvPath)
   fileData.createOrReplaceTempView("football")
-  val sqlDF = spark.sql("select _c2 as team ,count(_c2) as homeMatchCount from football where _c2 <>'HomeTeam' group by _c2")
-  // val homeTeamWin = spark.sql("select count(_6) as homeWin from football where _c6 ='H' group by _c2")
+  val sqlDF = spark.sql("select HomeTeam as TeamName,count(HomeTeam) as homeMatch from football where group by HomeTeam")
 
   fileData.show()
   sqlDF.show()

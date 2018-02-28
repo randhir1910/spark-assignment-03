@@ -4,7 +4,7 @@ import edu.knoldus.model.Constant
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
-object Operation {
+object DFOperation {
 
   val conf: SparkConf = new SparkConf().setMaster("local[*]")
   val spark: SparkSession = SparkSession.builder().appName("Spark assignment").config(conf).getOrCreate()
@@ -26,7 +26,7 @@ object Operation {
     spark.sql("select HomeTeam as TeamName, count(*) as matchPlayed from footballDataView group by HomeTeam")
   }
 
-  def getTopTenTeam: DataFrame = {
+  def getTeamWinPercentage: DataFrame = {
     spark.sql("select HomeTeam, (homeTeamWins + awayTeamWins)*100/(homeTeamPlayed + awayTeamPlayed) as winner from " +
       "homeTeamWinnerView  join awayTeamWinnerView  on HomeTeam = AwayTeam group by HomeTeam,winner order by winner desc limit 10")
   }
